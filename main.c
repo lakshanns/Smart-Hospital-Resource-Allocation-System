@@ -47,7 +47,7 @@ void mainmenue()
     printf("2.View Emergency Triage Priority Queue\n");
     printf("3.Display Analytics & Performance Report\n");
     printf("4.Exit System\n");
-    printf("Enter Choice(1-4): ");
+    printf("Enter Choice(1-4):");
     scanf("%d",&choice);
     if(choice==1)
     { system("cls");
@@ -69,8 +69,6 @@ void mainmenue()
     {
      printf("Invalid option.Try again.\n");
     }
-
-
 }
 void register_patient()
 { if (patient_count>=MAX_PATIENTS)
@@ -80,7 +78,6 @@ void register_patient()
     }
     int idx=patient_count;
     p_id[idx]=1001+idx;
-
     printf("\n---Patient Registration---\n");
     printf("Enter Patient Name:");
     getchar();
@@ -145,9 +142,8 @@ void register_patient()
     }else{
         p_discount[idx]=0.0;
     }
-
     p_final_payable[idx]=p_gross_total[idx]-p_discount[idx];
-
+    system("cls");
     display_bill(idx);
     append_patient_file(idx);
     patient_count++;
@@ -166,10 +162,45 @@ int allocate_bed(int ward_index,int*assigned_bed)
 {
 
 }
-void display_bill(int idx)
-{
+void display_bill(int i)
+{  int s_idx=p_specialty_id[i]-1;
+    double base=BASE_FEES[s_idx];
+    double surcharge=(p_urgency[i]==2)?base*0.20:((p_urgency[i]==3)?base*0.50:0.0);
+    double ward_cost=(p_is_admitted[i]==1)?p_days_admitted[i]*WARD_RATES[p_ward_id[i]-1]:0.0;
 
+    printf("\n====================================================\n");
+    printf("         SMART HOSPITAL ADMISSION & BILL           \n");
+    printf("----------------------------------------------------\n");
+    printf("Patient ID     :PAT-%d\n",p_id[i]);
+    printf("Patient Name   :%s\n",p_name[i]);
+    printf("Age            :%d Years %s\n",p_age[i],(p_discount[i]>0)?"(15% Subsidy Eligible)":"");
+    printf("Specialty      :%s\n",SPECIALTY_NAMES[s_idx]);
+    if (p_is_admitted[i]==1) {
+        printf("Assigned Ward:%s(Bed #%02d)\n",WARD_NAMES[p_ward_id[i]-1],p_bed_num[i]);
+    } else {
+        printf("Assigned Ward :None(Outpatient/OPD)\n");
+    }
+    printf("Urgency Level:Level%d(%s)\n",p_urgency[i],
+            (p_urgency[i]==3)?"Critical":((p_urgency[i]==2)?"Urgent":"Normal"));
+    printf("----------------------------------------------------\n");
+    printf("Base Consultation Fee:LKR %10.2f\n",base);
+    printf("Emergency Surcharge:LKR %10.2f(%s)\n",surcharge,
+            (p_urgency[i]==3)?"50%":((p_urgency[i]==2)?"20%":"0%"));
+    printf("Ward Stay Cost(%d Days):LKR%10.2f\n",p_days_admitted[i],ward_cost);
+    printf("----------------------------------------------------\n");
+    printf("Gross Total Bill      :LKR %10.2f\n",p_gross_total[i]);
+    printf("Age Subsidy Discount  :LKR %10.2f (%s)\n",-p_discount[i],(p_discount[i]>0)?"15%":"0%");
+    printf("----------------------------------------------------\n");
+    printf("Final Payable Amount  :LKR %10.2f\n",p_final_payable[i]);
+    if (p_urgency[i]==3){
+        printf("Estimated Waiting Time:0.00 mins(Immediate Attention)\n");
+    } else {
+        printf("Estimated Waiting Time:%.2f mins\n",p_wait_time[i]);
+    }
+    printf("====================================================\n");
 }
+
+
 void append_patient_file(int idx)
 {
 
