@@ -213,17 +213,17 @@ void generate_analytics()
         }
     }
 
-    printf("1.Patient Category Breakdown:\n");
-    printf("Total Patients:%d\n",patient_count);
-    printf("Level 1 (Normal):%d\n",lvl1);
-    printf("Level 2 (Urgent):%d\n",lvl2);
+    printf("1.Patient Category Breakdown:\n\n");
+    printf("Total Patients    :%d\n",patient_count);
+    printf("Level 1 (Normal)  :%d\n",lvl1);
+    printf("Level 2 (Urgent)  :%d\n",lvl2);
     printf("Level 3 (Critical):%d\n\n",lvl3);
 
-    printf("2.Financial Performance:\n");
+    printf("2.Financial Performance:\n\n");
     printf("Net Revenue Earned :LKR%.2f\n",total_revenue);
     printf("Total Discounts    :LKR%.2f\n\n",total_discounts);
 
-    printf("3.Ward Occupancy Rate:\n");
+    printf("3.Ward Occupancy Rate:\n\n");
     for (int w=0;w<NUM_WARDS;w++){
         int occupied=0;
         for (int b=0;b<WARD_CAPACITIES[w];b++) {
@@ -233,7 +233,7 @@ void generate_analytics()
         printf("%s:%d/%d(%.1f%%)\n",WARD_NAMES[w],occupied,WARD_CAPACITIES[w],percentage);
     }
 
-    printf("4.Highest Paying Patient Details:\n");
+    printf("\n4.Highest Paying Patient Details:\n\n");
     if (max_bill_idx!=-1){
         printf("Name        :%s\n",p_name[max_bill_idx]);
         printf("Total Bill  :LKR %.2f\n",p_final_payable[max_bill_idx]);
