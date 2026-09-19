@@ -87,7 +87,7 @@ void register_patient()
     printf("Enter Age:");
     scanf("%d",&p_age[idx]);
 
-    printf("Enter Urgency Level (1=Normal,2=Urgent,3=Critical):");
+    printf("Enter Urgency Level(1=Normal,2=Urgent,3=Critical):");
     scanf("%d",&p_urgency[idx]);
 
     printf("\nSpecialties:\n");
@@ -145,14 +145,15 @@ void register_patient()
     p_final_payable[idx]=p_gross_total[idx]-p_discount[idx];
     system("cls");
     display_bill(idx);
-    back_to_menu();
     patient_count++;
+    back_to_menu();
 }
 
 
 void display_triage_queue()
 { if (patient_count==0){
         printf("No patients currently registered in the queue\n");
+        back_to_menu();
         return;
     }
     int order[MAX_PATIENTS];
@@ -187,13 +188,65 @@ void display_triage_queue()
         printf("PAT-%d %s Level %d %s\n",p_id[idx],p_name[idx],p_urgency[idx],SPECIALTY_NAMES[p_specialty_id[idx]-1]);
     }
     printf("====================================================\n");
+    back_to_menu();
 }
 
 
 void generate_analytics()
-{
+{   printf("====================================================\n");
+    printf("         PERFORMANCE REPORTS & ANALYTICS            \n");
+    printf("====================================================\n");
+    int lvl1=0,lvl2=0,lvl3=0;
+    double total_revenue=0.0,total_discounts=0.0;
+    int max_bill_idx=-1;
+    double max_bill=-1.0;
 
+    for (int i=0;i<patient_count;i++){
+        if (p_urgency[i]==1)lvl1++;
+        else if (p_urgency[i]==2)lvl2++;
+        else if (p_urgency[i]==3)lvl3++;
+
+        total_revenue+=p_final_payable[i];
+        total_discounts+=p_discount[i];
+
+        if (p_final_payable[i]>max_bill) {
+            max_bill=p_final_payable[i];
+            max_bill_idx=i;
+        }
+    }
+
+    printf("1.Patient Category Breakdown:\n");
+    printf("Total Patients:%d\n",patient_count);
+    printf("Level 1 (Normal):%d\n",lvl1);
+    printf("Level 2 (Urgent):%d\n",lvl2);
+    printf("Level 3 (Critical):%d\n\n",lvl3);
+
+    printf("2.Financial Performance:\n");
+    printf("Net Revenue Earned :LKR%.2f\n",total_revenue);
+    printf("Total Discounts    :LKR%.2f\n\n",total_discounts);
+
+    printf("3.Ward Occupancy Rate:\n");
+    for (int w=0;w<NUM_WARDS;w++){
+        int occupied=0;
+        for (int b=0;b<WARD_CAPACITIES[w];b++) {
+            if(bedOccupancy[w][b]==1)occupied++;
+        }
+        double percentage=((double)occupied/WARD_CAPACITIES[w])*100.0;
+        printf("%s:%d/%d(%.1f%%)\n",WARD_NAMES[w],occupied,WARD_CAPACITIES[w],percentage);
+    }
+
+    printf("4.Highest Paying Patient Details:\n");
+    if (max_bill_idx!=-1){
+        printf("Name        :%s\n",p_name[max_bill_idx]);
+        printf("Total Bill  :LKR %.2f\n",p_final_payable[max_bill_idx]);
+    } else {
+        printf("No patients processed yet.\n");
+    }
+    printf("====================================================\n");
+    back_to_menu();
 }
+
+
 int allocate_bed(int ward_index,int*assigned_bed)
 {
 
