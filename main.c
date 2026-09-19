@@ -31,6 +31,7 @@ void back_to_menu();
 void register_patient();
 void display_triage_queue();
 void generate_analytics();
+void display_bed_matrix();
 void display_bill(int idx);
 int allocate_bed(int ward_index,int*assigned_bed);
 int main()
@@ -44,24 +45,30 @@ void mainmenu()
     printf("    SMART HOSPITAL MANAGEMENT SYSTEM - MENU\n");
     printf("===================================================\n");
     printf("1.Register New Patient Intake\n");
-    printf("2.View Emergency Triage Priority Queue\n");
-    printf("3.Display Analytics & Performance Report\n");
-    printf("4.Exit System\n");
-    printf("Enter Choice(1-4):");
+    printf("2.View Bed Occupancy Matrix\n");
+    printf("3.View Emergency Triage Priority Queue\n");
+    printf("4.Display Analytics & Performance Report\n");
+    printf("5.Exit System\n");
+    printf("Enter Choice(1-5):");
     scanf("%d",&choice);
     if(choice==1)
     { system("cls");
       register_patient();
     }
     else if(choice==2)
-    {system("cls");
-     display_triage_queue();
+    {
+      system("cls");
+      display_bed_matrix();
     }
     else if(choice==3)
     {system("cls");
+     display_triage_queue();
+    }
+    else if(choice==4)
+    {system("cls");
       generate_analytics();
     }
-    else if (choice==4)
+    else if (choice==5)
     {
     printf("Exiting system...\n");
     }
@@ -293,6 +300,14 @@ void display_bill(int i)
         printf("Estimated Waiting Time:%.2f mins\n",p_wait_time[i]);
     }
     printf("====================================================\n");
+}
+void display_bed_matrix()
+{
+    printf("====================================================\n");
+    printf("             WARD BED OCCUPANCY MATRIX        \n");
+    printf("====================================================\n");
+    printf(" Legend : [X]=Occupied | [ ]=Available\n");
+    printf("----------------------------------------------------\n");
 }
 void back_to_menu()
 {    char choice;
