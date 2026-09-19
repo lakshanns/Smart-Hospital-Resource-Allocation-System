@@ -20,12 +20,12 @@ double p_gross_total[MAX_PATIENTS];
 double p_final_payable[MAX_PATIENTS];
 int queue_counts[NUM_SPECIALTIES]={0,0,0,0};
 int bedOccupancy[4][20]={0};
-const char *SPECIALTY_NAMES[NUM_SPECIALTIES]={"General Practice(OPD)","Paediatrics","Cardiology","Neurology"};
-const double BASE_FEES[NUM_SPECIALTIES]={1500.00,2500.00,4500.00,5000.00};
-const char *WARD_NAMES[NUM_WARDS]={"General Ward","Paediatric Ward","Surgical Ward","ICU(Intensive Care Unit)"};
-const double WARD_RATES[NUM_WARDS]={3000.00,6000.00,12000.00,25000.00};
-const int CONSULTATION_TIMES[NUM_SPECIALTIES]={15,20,30,30};
-const int WARD_CAPACITIES[NUM_WARDS]={20,10,10,5};
+char *SPECIALTY_NAMES[NUM_SPECIALTIES]={"General Practice(OPD)","Paediatrics","Cardiology","Neurology"};
+double BASE_FEES[NUM_SPECIALTIES]={1500.00,2500.00,4500.00,5000.00};
+char *WARD_NAMES[NUM_WARDS]={"General Ward","Paediatric Ward","Surgical Ward","ICU(Intensive Care Unit)"};
+double WARD_RATES[NUM_WARDS]={3000.00,6000.00,12000.00,25000.00};
+int CONSULTATION_TIMES[NUM_SPECIALTIES]={15,20,30,30};
+int WARD_CAPACITIES[NUM_WARDS]={20,10,10,5};
 void mainmenu();
 void back_to_menu();
 void register_patient();
@@ -112,7 +112,7 @@ void register_patient()
         int w_idx=p_ward_id[idx]-1;
 
         if (!allocate_bed(w_idx,&p_bed_num[idx])) {
-            printf("WARNING: Selected ward is at maximum capacity! Ward admission cancelled.\n");
+            printf("Selected ward is at maximum capacity! Ward admission cancelled.\n");
             p_is_admitted[idx]=0;
             p_ward_id[idx]=0;
             p_days_admitted[idx]=0;
@@ -272,21 +272,21 @@ void display_bill(int i)
     printf("Age            :%d Years %s\n",p_age[i],(p_discount[i]>0)?"(15% Subsidy Eligible)":"");
     printf("Specialty      :%s\n",SPECIALTY_NAMES[s_idx]);
     if (p_is_admitted[i]==1) {
-        printf("Assigned Ward:%s(Bed %d)\n",WARD_NAMES[p_ward_id[i]-1],p_bed_num[i]);
+        printf("Assigned Ward  :%s(Bed %d)\n",WARD_NAMES[p_ward_id[i]-1],p_bed_num[i]);
     } else {
-        printf("Assigned Ward:None(Outpatient/OPD)\n");
+        printf("Assigned Ward  :None(Outpatient/OPD)\n");
     }
-    printf("Urgency Level:Level%d(%s)\n",p_urgency[i],
+    printf("Urgency Level  :Leve l%d(%s)\n",p_urgency[i],
             (p_urgency[i]==3)?"Critical":((p_urgency[i]==2)?"Urgent":"Normal"));
     printf("----------------------------------------------------\n");
-    printf("Base Consultation Fee:LKR %10.2f\n",base);
-    printf("Emergency Surcharge:LKR %.2f(%s)\n",surcharge,(p_urgency[i]==3)?"50%":((p_urgency[i]==2)?"20%":"0%"));
-    printf("Ward Stay Cost(%d Days):LKR%10.2f\n",p_days_admitted[i],ward_cost);
+    printf("Base Consultation Fee :LKR %.2f\n",base);
+    printf("Emergency Surcharge   :LKR %.2f(%s)\n",surcharge,(p_urgency[i]==3)?"50%":((p_urgency[i]==2)?"20%":"0%"));
+    printf("Ward Stay Cost(%d Days) :LKR%.2f\n",p_days_admitted[i],ward_cost);
     printf("----------------------------------------------------\n");
-    printf("Gross Total Bill      :LKR %10.2f\n",p_gross_total[i]);
-    printf("Age Subsidy Discount  :LKR %10.2f (%s)\n",-p_discount[i],(p_discount[i]>0)?"15%":"0%");
+    printf("Gross Total Bill      :LKR %.2f\n",p_gross_total[i]);
+    printf("Age Subsidy Discount  :LKR %.2f (%s)\n",-p_discount[i],(p_discount[i]>0)?"15%":"0%");
     printf("----------------------------------------------------\n");
-    printf("Final Payable Amount  :LKR %10.2f\n",p_final_payable[i]);
+    printf("Final Payable Amount  :LKR %.2f\n",p_final_payable[i]);
     if (p_urgency[i]==3){
         printf("Estimated Waiting Time:0.00 mins(Immediate Attention)\n");
     } else {
