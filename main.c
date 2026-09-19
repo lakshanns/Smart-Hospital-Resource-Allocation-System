@@ -107,7 +107,7 @@ void register_patient()
         for (int i=0;i<NUM_WARDS;i++){
             printf("%d.%s(Rate:LKR%.2f/Day)\n",i+1,WARD_NAMES[i],WARD_RATES[i]);
         }
-        printf("Select Ward ID (1-4):");
+        printf("Select Ward ID(1-4):");
         scanf("%d",&p_ward_id[idx]);
         int w_idx=p_ward_id[idx]-1;
 
@@ -148,8 +148,6 @@ void register_patient()
     patient_count++;
     back_to_menu();
 }
-
-
 void display_triage_queue()
 { if (patient_count==0){
         printf("No patients currently registered in the queue\n");
@@ -181,11 +179,11 @@ void display_triage_queue()
     printf("\n====================================================\n");
     printf("        EMERGENCY TRIAGE SORTED QUEUE               \n");
     printf("====================================================\n");
-    printf("%s %s %s %s\n","ID","Name","Urgency","Specialty");
+    printf("%s            %s        %s        %s\n","ID","Name","Urgency","Specialty");
     printf("----------------------------------------------------\n");
     for (int k=0;k<patient_count;k++){
         int idx=order[k];
-        printf("PAT-%d %s Level %d %s\n",p_id[idx],p_name[idx],p_urgency[idx],SPECIALTY_NAMES[p_specialty_id[idx]-1]);
+        printf("PAT-%d    %s      Level-%d     %s\n",p_id[idx],p_name[idx],p_urgency[idx],SPECIALTY_NAMES[p_specialty_id[idx]-1]);
     }
     printf("====================================================\n");
     back_to_menu();
@@ -249,8 +247,17 @@ void generate_analytics()
 
 int allocate_bed(int ward_index,int*assigned_bed)
 {
-
+    int cap=WARD_CAPACITIES[ward_index];
+    for (int j=0;j<cap;j++){
+        if (bedOccupancy[ward_index][j]==0) {
+            bedOccupancy[ward_index][j]=1;
+            *assigned_bed=j+1;
+            return 1;
+        }
+    }
+    return 0;
 }
+
 void display_bill(int i)
 {  int s_idx=p_specialty_id[i]-1;
     double base=BASE_FEES[s_idx];
@@ -265,16 +272,15 @@ void display_bill(int i)
     printf("Age            :%d Years %s\n",p_age[i],(p_discount[i]>0)?"(15% Subsidy Eligible)":"");
     printf("Specialty      :%s\n",SPECIALTY_NAMES[s_idx]);
     if (p_is_admitted[i]==1) {
-        printf("Assigned Ward:%s(Bed #%02d)\n",WARD_NAMES[p_ward_id[i]-1],p_bed_num[i]);
+        printf("Assigned Ward:%s(Bed %d)\n",WARD_NAMES[p_ward_id[i]-1],p_bed_num[i]);
     } else {
-        printf("Assigned Ward :None(Outpatient/OPD)\n");
+        printf("Assigned Ward:None(Outpatient/OPD)\n");
     }
     printf("Urgency Level:Level%d(%s)\n",p_urgency[i],
             (p_urgency[i]==3)?"Critical":((p_urgency[i]==2)?"Urgent":"Normal"));
     printf("----------------------------------------------------\n");
     printf("Base Consultation Fee:LKR %10.2f\n",base);
-    printf("Emergency Surcharge:LKR %10.2f(%s)\n",surcharge,
-            (p_urgency[i]==3)?"50%":((p_urgency[i]==2)?"20%":"0%"));
+    printf("Emergency Surcharge:LKR %.2f(%s)\n",surcharge,(p_urgency[i]==3)?"50%":((p_urgency[i]==2)?"20%":"0%"));
     printf("Ward Stay Cost(%d Days):LKR%10.2f\n",p_days_admitted[i],ward_cost);
     printf("----------------------------------------------------\n");
     printf("Gross Total Bill      :LKR %10.2f\n",p_gross_total[i]);
@@ -303,7 +309,7 @@ void back_to_menu()
                 {
                     system("cls");
                     printf("=========================================\n");
-                    printf("         GOOD BYE! HAVE A NICE DAY       \n");
+                    printf("          HAVE A NICE DAY!       \n");
                     printf("=========================================\n");
 
                 }
