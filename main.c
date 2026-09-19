@@ -26,19 +26,19 @@ const char *WARD_NAMES[NUM_WARDS]={"General Ward","Paediatric Ward","Surgical Wa
 const double WARD_RATES[NUM_WARDS]={3000.00,6000.00,12000.00,25000.00};
 const int CONSULTATION_TIMES[NUM_SPECIALTIES]={15,20,30,30};
 const int WARD_CAPACITIES[NUM_WARDS]={20,10,10,5};
-void mainmenue();
+void mainmenu();
+void back_to_menu();
 void register_patient();
 void display_triage_queue();
 void generate_analytics();
 void display_bill(int idx);
-void append_patient_file(int idx);
 int allocate_bed(int ward_index,int*assigned_bed);
 int main()
 {
-    mainmenue();
+    mainmenu();
     return 0;
 }
-void mainmenue()
+void mainmenu()
 {  int choice;
     printf("===================================================\n");
     printf("    SMART HOSPITAL MANAGEMENT SYSTEM - MENU\n");
@@ -145,15 +145,51 @@ void register_patient()
     p_final_payable[idx]=p_gross_total[idx]-p_discount[idx];
     system("cls");
     display_bill(idx);
-    append_patient_file(idx);
+    back_to_menu();
     patient_count++;
 }
 
 
 void display_triage_queue()
-{
+{ if (patient_count==0){
+        printf("No patients currently registered in the queue\n");
+        return;
+    }
+    int order[MAX_PATIENTS];
+    for (int i=0;i<patient_count;i++)order[i]=i;
 
+    for (int i=0;i<patient_count-1;i++){
+        int best_idx=i;
+        for (int j=i+1;j<patient_count;j++){
+            int u_curr=p_urgency[order[j]];
+            int u_best=p_urgency[order[best_idx]];
+
+            if (u_curr>u_best) {
+                best_idx=j;
+            } else if(u_curr==u_best){
+                if(order[j]<order[best_idx]) {
+                    best_idx=j;
+                }
+            }
+        }
+        int temp=order[i];
+        order[i]=order[best_idx];
+        order[best_idx]=temp;
+    }
+
+    printf("\n====================================================\n");
+    printf("        EMERGENCY TRIAGE SORTED QUEUE               \n");
+    printf("====================================================\n");
+    printf("%s %s %s %s\n","ID","Name","Urgency","Specialty");
+    printf("----------------------------------------------------\n");
+    for (int k=0;k<patient_count;k++){
+        int idx=order[k];
+        printf("PAT-%d %s Level %d %s\n",p_id[idx],p_name[idx],p_urgency[idx],SPECIALTY_NAMES[p_specialty_id[idx]-1]);
+    }
+    printf("====================================================\n");
 }
+
+
 void generate_analytics()
 {
 
@@ -199,11 +235,28 @@ void display_bill(int i)
     }
     printf("====================================================\n");
 }
+void back_to_menu()
+{    char choice;
+     printf("\n\nBack to main menu(Y/N):");
+                scanf(" %c",&choice);
 
+                if (choice=='Y'||choice=='y')
+                {
+                    system("cls");
+                    mainmenu();
 
-void append_patient_file(int idx)
-{
+                }
+                else if(choice=='N'||choice=='n')
+                {
+                    system("cls");
+                    printf("=========================================\n");
+                    printf("         GOOD BYE! HAVE A NICE DAY       \n");
+                    printf("=========================================\n");
 
+                }
+                else
+                {
+                    printf("\n\tInvalid choice! Please enter Y or N.\n");
+                }
 }
-
 
