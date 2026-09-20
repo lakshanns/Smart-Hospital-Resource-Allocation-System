@@ -308,6 +308,28 @@ void display_bed_matrix()
     printf("====================================================\n");
     printf(" Legend : [X]=Occupied | [ ]=Available\n");
     printf("----------------------------------------------------\n");
+    for (int w=0;w<NUM_WARDS;w++) {
+        printf("%s(Cap:%2d):\n",WARD_NAMES[w],WARD_CAPACITIES[w]);
+
+        int occupied_count=0;
+        for (int b=0;b<WARD_CAPACITIES[w];b++){
+            if (b >0 && b%10==0){
+                printf("\n");
+            }
+
+            if (bedOccupancy[w][b]==1){
+                printf("[X]");
+                occupied_count++;
+            } else{
+                printf("[ ]");
+            }
+        }
+
+        double occ_rate=((double)occupied_count/WARD_CAPACITIES[w])*100.0;
+        printf("\nOccupancy:%d/%d (%.1f%%)\n",occupied_count,WARD_CAPACITIES[w],occ_rate);
+        printf("----------------------------------------------------");
+    }
+    printf("\n");
 }
 void back_to_menu()
 {    char choice;
