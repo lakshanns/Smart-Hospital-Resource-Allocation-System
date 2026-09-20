@@ -41,9 +41,9 @@ int main()
 }
 void mainmenu()
 {  int choice;
-    printf("===================================================\n");
-    printf("    SMART HOSPITAL MANAGEMENT SYSTEM - MENU\n");
-    printf("===================================================\n");
+    printf("======================================================\n");
+    printf("SMART City General HOSPITAL MANAGEMENT SYSTEM - MENU\n");
+    printf("======================================================\n");
     printf("1.Register New Patient Intake\n");
     printf("2.View Bed Occupancy Matrix\n");
     printf("3.View Emergency Triage Priority Queue\n");
@@ -77,6 +77,10 @@ void mainmenu()
      if (confirm==1)
       {
         system("cls");
+        printf("=====================================================\n");
+        printf("    THANK YOU FOR VISITING CITY GENERAL HOSPITAL     \n");
+        printf("         FOR EMERGENCY HELP CALL: 911/1990          \n");
+        printf("=====================================================\n");
         printf("Exiting system.Goodbye!\n");
       }
     else if(confirm==0)
@@ -311,6 +315,10 @@ void display_bill(int i)
         printf("Estimated Waiting Time:%.2f mins\n",p_wait_time[i]);
     }
     printf("====================================================\n");
+    printf("=====================================================\n");
+    printf("    THANK YOU FOR VISITING CITY GENERAL HOSPITAL     \n");
+    printf("         FOR EMERGENCY HELP CALL: 911/1990          \n");
+    printf("=====================================================\n");
 }
 void display_bed_matrix()
 {
