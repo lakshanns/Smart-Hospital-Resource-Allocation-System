@@ -70,7 +70,19 @@ void mainmenu()
     }
     else if (choice==5)
     {
-    printf("Exiting system...\n");
+     system("cls");
+     int confirm;
+     printf("Are you sure you want to exit?(1=Yes,0=No):");
+     scanf("%d",&confirm);
+     if (confirm==1)
+      {
+        system("cls");
+        printf("Exiting system.Goodbye!\n");
+      }
+    else if(confirm==0)
+    {
+        system("cls");
+        mainmenu();}
     }
     else
     {
